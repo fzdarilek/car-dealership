@@ -39,12 +39,12 @@ public class Car implements Serializable{
         return model;
     }
 
-    public int getYear() {
-        return year;
+    public String getName() {
+        return name;
     }
 
-    public int getMileage() {
-        return mileage;
+    public int getYear() {
+        return year;
     }
 
     public float getPrice() {
