@@ -2,27 +2,27 @@ import java.io.*;
 
 public class Car implements Serializable{
     String VIN;
-    String make;
+    String brand;
     String model;
+    String name;
     int year;
-    int mileage;
     float price;
     
     Car() {};   // default constructor
-    Car(String VIN, String make, String model, int year, int mileage, float price) {
-        this.VIN = VIN;
-        this.make = make;
+    Car(String VIN, String brand, String model, String name, int year, float price) {
+        this.brand = brand;
+        this.name = name;
         this.model = model;
+        this.VIN = VIN;
         this.year = year;
-        this.mileage = mileage;
         this.price = price;
     }
-    public boolean addNewCar(String VIN, String make, String model, int year, int mileage, float price) {
+    public boolean addNewCar(String VIN, String brand, String model, String name, int year, float price) {
         this.VIN = VIN;
-        this.make = make;
+        this.brand = brand;
         this.model = model;
+        this.name = name;
         this.year = year;
-        this.mileage = mileage;
         this.price = price;
         return true;
     }
@@ -31,8 +31,8 @@ public class Car implements Serializable{
         return VIN;
     }
 
-    public String getMake() {
-        return make;
+    public String getbrand() {
+        return brand;
     }
 
     public String getModel() {
