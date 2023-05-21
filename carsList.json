@@ -1,12 +1,11 @@
 [
     {
         "Car": {
-            "Name": "",
+            "Brand": "Honda",
             "VIN": "",
-            "make": "",
+            "name": "",
             "model": "",
             "year": "",
-            "mileage": "",
             "price": ""
         }
     }
