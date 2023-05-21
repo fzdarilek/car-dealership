@@ -1,0 +1,13 @@
+[
+    {
+        "Car": {
+            "Name": "",
+            "VIN": "",
+            "make": "",
+            "model": "",
+            "year": "",
+            "mileage": "",
+            "price": ""
+        }
+    }
+]
