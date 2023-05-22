@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
+import java.awt.GridLayout;
 
 public class carsFrame {
     private static final String JSON_FILE_PATH = "carsList.json";
@@ -70,38 +71,38 @@ public class carsFrame {
 
     private static void addCar() {
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new BorderLayout());
-
+        inputPanel.setLayout(new GridLayout(6, 2));
+    
         JLabel brandLabel = new JLabel("Brand:");
         JTextField brandField = new JTextField(10);
-        inputPanel.add(brandLabel, BorderLayout.WEST);
-        inputPanel.add(brandField, BorderLayout.EAST);
-
+        inputPanel.add(brandLabel);
+        inputPanel.add(brandField);
+    
         JLabel vinLabel = new JLabel("VIN:");
         JTextField vinField = new JTextField(10);
-        inputPanel.add(vinLabel, BorderLayout.WEST);
-        inputPanel.add(vinField, BorderLayout.EAST);
-
+        inputPanel.add(vinLabel);
+        inputPanel.add(vinField);
+    
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField(10);
-        inputPanel.add(nameLabel, BorderLayout.WEST);
-        inputPanel.add(nameField, BorderLayout.EAST);
-
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+    
         JLabel modelLabel = new JLabel("Model:");
         JComboBox<String> modelComboBox = new JComboBox<>(MODELS);
-        inputPanel.add(modelLabel, BorderLayout.WEST);
-        inputPanel.add(modelComboBox, BorderLayout.EAST);
-
+        inputPanel.add(modelLabel);
+        inputPanel.add(modelComboBox);
+    
         JLabel yearLabel = new JLabel("Year:");
         JTextField yearField = new JTextField(10);
-        inputPanel.add(yearLabel, BorderLayout.WEST);
-        inputPanel.add(yearField, BorderLayout.EAST);
-
+        inputPanel.add(yearLabel);
+        inputPanel.add(yearField);
+    
         JLabel priceLabel = new JLabel("Price:");
         JTextField priceField = new JTextField(10);
-        inputPanel.add(priceLabel, BorderLayout.WEST);
-        inputPanel.add(priceField, BorderLayout.EAST);
-
+        inputPanel.add(priceLabel);
+        inputPanel.add(priceField);
+    
         int result = JOptionPane.showConfirmDialog(frame, inputPanel, "Add Car", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             String brand = brandField.getText();
@@ -110,7 +111,7 @@ public class carsFrame {
             String model = (String) modelComboBox.getSelectedItem();
             String year = yearField.getText();
             String price = priceField.getText();
-
+    
             try {
                 JSONObject carData = new JSONObject();
                 carData.put("Brand", brand);
@@ -119,10 +120,10 @@ public class carsFrame {
                 carData.put("Model", model);
                 carData.put("Year", year);
                 carData.put("Price", price);
-
+    
                 JSONArray carsArray;
                 JSONObject carsData;
-
+    
                 if (Files.exists(Paths.get(JSON_FILE_PATH))) {
                     String fileContent = new String(Files.readAllBytes(Paths.get(JSON_FILE_PATH)));
                     carsData = new JSONObject(fileContent);
@@ -135,11 +136,11 @@ public class carsFrame {
                     carsData = new JSONObject();
                     carsArray = new JSONArray();
                 }
-
+    
                 carsArray.put(carData);
                 carsData.put("Cars", carsArray);
                 Files.write(Paths.get(JSON_FILE_PATH), carsData.toString().getBytes());
-
+    
                 JOptionPane.showMessageDialog(frame, "Car added successfully!");
             } catch (JSONException | IOException ex) {
                 ex.printStackTrace();
@@ -147,46 +148,47 @@ public class carsFrame {
             }
         }
     }
+    
 
     private static void showCars() {
         try {
             if (Files.exists(Paths.get(JSON_FILE_PATH))) {
                 String fileContent = new String(Files.readAllBytes(Paths.get(JSON_FILE_PATH)));
                 JSONObject carsData = new JSONObject(fileContent);
-
+    
                 if (carsData.has("Cars")) {
                     JSONArray carsArray = carsData.getJSONArray("Cars");
-
+    
                     if (carsArray.length() > 0) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append("Available Cars:\n");
-
+                        sb.append("Available Cars:\n\n");
+    
                         for (int i = 0; i < carsArray.length(); i++) {
                             JSONObject carData = carsArray.getJSONObject(i);
-                            sb.append("Model: ").append(carData.getString("Model")).append("\n")
-                              .append("Brand: ").append(carData.getString("Brand")).append("\n")
-                              .append("VIN: ").append(carData.getString("VIN")).append("\n")
-                              .append("Name: ").append(carData.getString("Name")).append("\n")
-                              .append("Year: ").append(carData.getString("Year")).append("\n")
-                              .append("Price: ").append(carData.getString("Price")).append("\n")
-                              .append("\n");
+                            sb.append("Car ").append(i + 1).append(":\n");
+                            sb.append("Brand: ").append(carData.getString("Brand")).append("\n");
+                            sb.append("VIN: ").append(carData.getString("VIN")).append("\n");
+                            sb.append("Name: ").append(carData.getString("Name")).append("\n");
+                            sb.append("Model: ").append(carData.getString("Model")).append("\n");
+                            sb.append("Year: ").append(carData.getString("Year")).append("\n");
+                            sb.append("Price: ").append(carData.getString("Price")).append("\n\n");
                         }
-
-                        JTextArea carsTextArea = new JTextArea(sb.toString());
-                        carsTextArea.setEditable(false);
-                        JOptionPane.showMessageDialog(frame, new JScrollPane(carsTextArea));
+    
+                        textArea.setText(sb.toString());
                     } else {
-                        JOptionPane.showMessageDialog(frame, "No cars available.");
+                        textArea.setText("No cars available.");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(frame, "No cars available.");
+                    textArea.setText("No cars available.");
                 }
             } else {
-                JOptionPane.showMessageDialog(frame, "No cars available.");
+                textArea.setText("No cars available.");
             }
         } catch (JSONException | IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, "Failed to retrieve car data. Please try again.");
         }
     }
-}
+    
+    }
+
