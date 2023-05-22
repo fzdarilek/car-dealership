@@ -1,9 +1,1 @@
-{
-      "Brand": [],
-      "VIN": [],
-      "Name": [],
-      "Model": [],
-      "Year": [],
-      "Price": []
-  }
-  
+{"Brand":[],"Cars":[{"Brand":"","Year":"","Price":"d","Model":"Model A","VIN":"","Name":""},{"Brand":"","Year":"","Price":"d","Model":"Model A","VIN":"","Name":""},{"Brand":"","Year":"","Price":"xz","Model":"Model A","VIN":"","Name":""},{"Brand":"fg","Year":"fgf","Price":"fgfg","Model":"Model A","VIN":"fgf","Name":"fgf"},{"Brand":"","Year":"","Price":"","Model":"Model A","VIN":"","Name":""}],"Year":[],"Price":[],"Model":[],"VIN":[],"Name":[]}
