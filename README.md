@@ -1,6 +1,6 @@
 # car-dealership
 * Car dealership school project made in Java. 
-* Tested in VSCode
+* Tested in [VSCode](https://code.visualstudio.com/)
 ## How to run
 * Make sure you have [Maven](https://maven.apache.org/download.cgi) installed on your device
 ``` 
