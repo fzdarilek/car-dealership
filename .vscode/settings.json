@@ -2,5 +2,6 @@
     "java.project.sourcePaths": [
         "carDealership/src",
         "my-project/src/main/java/com/example"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
