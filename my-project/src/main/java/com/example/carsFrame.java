@@ -173,7 +173,6 @@ public class carsFrame {
                 carData.put("Model", model);
                 carData.put("Year", year);
                 carData.put("Price", price);
-                carData.put("Image", destinationFile.getAbsolutePath()); // Store the image path in the JSON data
         
                 final JSONArray carsArray;
                 final JSONObject carsData;
