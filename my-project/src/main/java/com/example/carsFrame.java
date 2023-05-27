@@ -143,11 +143,28 @@ public class carsFrame {
             String price = priceField.getText();
             String imagePath = selectedImageLabel.getText();
         
-            
-            if (brand.isEmpty() || vin.isEmpty() || name.isEmpty() || model.isEmpty() || year.isEmpty() || price.isEmpty() || imagePath.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Please fill in all the fields.");
+
+        if (brand.isEmpty() || vin.isEmpty() || name.isEmpty() || model.isEmpty() || year.isEmpty() || price.isEmpty() || imagePath.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Please fill in all the fields.");
+            return;
+        }
+
+        // Additional validation checks
+        if (vin.length() != 17 || !vin.matches("[A-HJ-NPR-Z0-9]{17}")) {
+            JOptionPane.showMessageDialog(frame, "Invalid VIN. Please enter a valid VIN.");
+            return;
+        }
+
+        try {
+            float floatValue = Float.parseFloat(price);
+            if (floatValue < 0) {
+                JOptionPane.showMessageDialog(frame, "Invalid price. Please enter a valid price.");
                 return;
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Invalid price. Please enter a valid price.");
+            return;
+        }
         
             
             String currentDirectory = System.getProperty("user.dir");
