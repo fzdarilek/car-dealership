@@ -41,10 +41,10 @@ public class carsFrame {
         textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
         frame.add(scrollPane, BorderLayout.CENTER);
-
-        JButton welcomeButton = new JButton("Welcome");
-        JButton addCarButton = new JButton("Add car");
-        JButton seeCarsButton = new JButton("Show Car");
+        JToggleButton welcomeButton = new JToggleButton("Welcome");
+        JToggleButton addCarButton = new JToggleButton("Add car");
+        JToggleButton seeCarsButton = new JToggleButton("Show Car");
+        
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(welcomeButton);
@@ -149,7 +149,6 @@ public class carsFrame {
             return;
         }
 
-        // Additional validation checks
         if (vin.length() != 17 || !vin.matches("[A-HJ-NPR-Z0-9]{17}")) {
             JOptionPane.showMessageDialog(frame, "Invalid VIN. Please enter a valid VIN.");
             return;
