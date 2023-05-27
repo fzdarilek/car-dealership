@@ -27,7 +27,6 @@ import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.awt.Image;
-import java.awt.Graphics2D;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class carsFrame {
