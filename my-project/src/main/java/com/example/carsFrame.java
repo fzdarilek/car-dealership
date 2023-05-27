@@ -128,31 +128,13 @@ public class carsFrame {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     selectedImageLabel.setText(selectedFile.getAbsolutePath());
-                    String currentDirectory = System.getProperty("user.dir");
-                    String destinationPath = currentDirectory + "\\resources\\addedImages";
-
-                    File destinationFolder = new File(destinationPath);
-                    int imageCount = destinationFolder.listFiles().length;
-
-                    String newImageName = "image" + (imageCount + 1) + ".png";
-                    Path destination = Paths.get(destinationPath + File.separator + newImageName);
-
-                    try {
-                        BufferedImage inputImage = ImageIO.read(selectedFile);
-
-                        File destinationFile = new File(destinationPath + File.separator + newImageName);
-                        ImageIO.write(inputImage, "png", destinationFile);
-
-                        System.out.println("Image saved: " + destinationFile.getAbsolutePath());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
                 }
             }
         });
-
+        
         int result = JOptionPane.showConfirmDialog(frame, inputPanel, "Add Car", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
+            // Retrieve the car information
             String brand = brandField.getText();
             String vin = vinField.getText();
             String name = nameField.getText();
@@ -160,12 +142,30 @@ public class carsFrame {
             String year = yearField.getText();
             String price = priceField.getText();
             String imagePath = selectedImageLabel.getText();
-
+        
+            
             if (brand.isEmpty() || vin.isEmpty() || name.isEmpty() || model.isEmpty() || year.isEmpty() || price.isEmpty() || imagePath.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Please fill in all the fields.");
                 return;
             }
+        
+            
+            String currentDirectory = System.getProperty("user.dir");
+            String destinationPath = currentDirectory + "\\resources\\addedImages";
+        
+            File destinationFolder = new File(destinationPath);
+            int imageCount = destinationFolder.listFiles().length;
+        
+            String newImageName = "image" + (imageCount + 1) + ".png";
+            Path destination = Paths.get(destinationPath + File.separator + newImageName);
+        
             try {
+                BufferedImage inputImage = ImageIO.read(new File(imagePath));
+                File destinationFile = new File(destination.toString());
+                ImageIO.write(inputImage, "png", destinationFile);
+                System.out.println("Image saved: " + destinationFile.getAbsolutePath());
+        
+                
                 JSONObject carData = new JSONObject();
                 carData.put("Brand", brand);
                 carData.put("VIN", vin);
@@ -173,9 +173,11 @@ public class carsFrame {
                 carData.put("Model", model);
                 carData.put("Year", year);
                 carData.put("Price", price);
+                carData.put("Image", destinationFile.getAbsolutePath()); // Store the image path in the JSON data
+        
                 final JSONArray carsArray;
                 final JSONObject carsData;
-
+        
                 if (Files.exists(Paths.get(JSON_FILE_PATH))) {
                     String fileContent = new String(Files.readAllBytes(Paths.get(JSON_FILE_PATH)));
                     carsData = new JSONObject(fileContent);
@@ -188,11 +190,11 @@ public class carsFrame {
                     carsData = new JSONObject();
                     carsArray = new JSONArray();
                 }
-
+        
                 carsArray.put(carData);
                 carsData.put("Cars", carsArray);
                 Files.write(Paths.get(JSON_FILE_PATH), carsData.toString().getBytes());
-
+        
                 JOptionPane.showMessageDialog(frame, "Car added successfully!");
             } catch (JSONException | IOException ex) {
                 ex.printStackTrace();
@@ -200,6 +202,7 @@ public class carsFrame {
             }
         }
     }
+        
 
     private static void showCars() {
         try {
