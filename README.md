@@ -44,9 +44,3 @@ The application uses the following dependencies:
 Contributions to the project are welcome. If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
 
 Thank you for using the Cars Dealership Application!
-
-## TODO
-* [ ] Short clip using the app - tried using windows10 built in screen recorder
-* [x] Search cars based of a name
-* [x] Be able to provide a jpg file for the car
-* [x] change env to support images and text/input box 
