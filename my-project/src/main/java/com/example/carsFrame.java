@@ -40,7 +40,7 @@ public class carsFrame {
         frame = new JFrame("Cars Dealership");
         textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
-        frame.add(scrollPane, BorderLayout.SOUTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JToggleButton welcomeButton = new JToggleButton("Welcome");
@@ -49,13 +49,14 @@ public class carsFrame {
         buttonPanel.add(welcomeButton);
         buttonPanel.add(addCarButton);
         buttonPanel.add(seeCarsButton);
-        frame.add(buttonPanel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        int width = 800;
+        int width = 600;
         int height = 600;
         frame.setSize(width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        JOptionPane.showMessageDialog(frame, "Welcome! Please select an option from the buttons.");
 
         welcomeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -83,8 +84,8 @@ public class carsFrame {
             JLabel vinLabel = new JLabel("VIN:");
             JTextField vinField = new JTextField(10);
         
-            JLabel nameLabel = new JLabel("Name:");
-            JTextField nameField = new JTextField(10);
+            JLabel travelLabel = new JLabel("km travelled:");
+            JTextField travelField = new JTextField(10);
         
             JLabel modelLabel = new JLabel("Model:");
             JTextField modelField = new JTextField(10);
@@ -108,26 +109,26 @@ public class carsFrame {
             brandPanel.add(brandLabel);
             brandPanel.add(brandField);
             inputPanel.add(brandPanel);
-        
+            
+            JPanel modelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            modelPanel.add(modelLabel);
+            modelPanel.add(modelField);
+            inputPanel.add(modelPanel);
+                    
+            JPanel yearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            yearPanel.add(yearLabel);
+            yearPanel.add(yearField);
+            inputPanel.add(yearPanel);
+
             JPanel vinPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             vinPanel.add(vinLabel);
             vinPanel.add(vinField);
             inputPanel.add(vinPanel);
         
-            JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            namePanel.add(nameLabel);
-            namePanel.add(nameField);
-            inputPanel.add(namePanel);
-        
-            JPanel modelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            modelPanel.add(modelLabel);
-            modelPanel.add(modelField);
-            inputPanel.add(modelPanel);
-        
-            JPanel yearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            yearPanel.add(yearLabel);
-            yearPanel.add(yearField);
-            inputPanel.add(yearPanel);
+            JPanel travelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            travelPanel.add(travelLabel);
+            travelPanel.add(travelField);
+            inputPanel.add(travelPanel);
         
             JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             pricePanel.add(priceLabel);
@@ -161,14 +162,14 @@ public class carsFrame {
                 // Retrieve the car information
                 String brand = brandField.getText();
                 String vin = vinField.getText();
-                String name = nameField.getText();
+                String kmTravelled = travelField.getText();
                 String model = modelField.getText();
                 String year = yearField.getText();
                 String price = priceField.getText();
                 String imagePath = selectedImageLabel.getText();
         
                 // Validate the input fields
-                if (brand.isEmpty() || vin.isEmpty() || name.isEmpty() || model.isEmpty() || year.isEmpty() || price.isEmpty() || imagePath.isEmpty()) {
+                if (brand.isEmpty() || vin.isEmpty() || kmTravelled.isEmpty() || model.isEmpty() || year.isEmpty() || price.isEmpty() || imagePath.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in all the fields.");
                     addCar();
                     return;
@@ -212,7 +213,7 @@ public class carsFrame {
                 JSONObject carData = new JSONObject();
                 carData.put("Brand", brand);
                 carData.put("VIN", vin);
-                carData.put("Name", name);
+                carData.put("km travelled", kmTravelled);
                 carData.put("Model", model);
                 carData.put("Year", year);
                 carData.put("Price", price);
@@ -254,66 +255,124 @@ public class carsFrame {
                     JSONArray carsArray = carsData.getJSONArray("Cars");
 
                     if (carsArray.length() > 0) {
+                        // Create a JComboBox to select the car by name
                         JComboBox<String> comboBox = new JComboBox<>();
-                        StringBuilder sb = new StringBuilder();
-                        textArea.setText("");
 
                         for (int i = 0; i < carsArray.length(); i++) {
                             JSONObject carData = carsArray.getJSONObject(i);
-                            String name = carData.getString("Name");
-                            comboBox.addItem(name);
+                            String brand = carData.getString("Brand");
+                            comboBox.addItem(brand);
                         }
 
+                        // Show the JComboBox in a JOptionPane
                         JOptionPane.showMessageDialog(frame, comboBox);
 
-                        String selectedName = (String) comboBox.getSelectedItem();
+                        // Retrieve the selected car name
+                        String selectedBrand = (String) comboBox.getSelectedItem();
 
-                        sb.append("Cars with Name: ").append(selectedName).append("\n");
+                        JPanel showPanel = new JPanel();
+                        showPanel.setLayout(new BoxLayout(showPanel, BoxLayout.Y_AXIS));
 
                         int selectedCarIndex = -1;
 
                         for (int i = 0; i < carsArray.length(); i++) {
                             JSONObject carData = carsArray.getJSONObject(i);
-                            String name = carData.getString("Name");
-                            if (name.equals(selectedName)) {
-                                sb.append("Car ").append(i + 1).append(":\n");
-                                sb.append("Brand: ").append(carData.getString("Brand")).append("\n");
-                                sb.append("VIN: ").append(carData.getString("VIN")).append("\n");
-                                sb.append("Name: ").append(carData.getString("Name")).append("\n");
-                                sb.append("Model: ").append(carData.getString("Model")).append("\n");
-                                sb.append("Year: ").append(carData.getString("Year")).append("\n");
-                                sb.append("Price: ").append(carData.getString("Price")).append("\n");
-
+                            String brand = carData.getString("Brand");
+                            if (brand.equals(selectedBrand)) {
                                 selectedCarIndex = i + 1;
+
+                                // Create the labels and fields for car details
+
+                                JLabel brandLabel = new JLabel("Brand:");
+                                JTextField brandField = new JTextField(10);
+                                brandField.setText(carData.getString("Brand"));
+                                brandField.setEditable(false);
+
+                                JLabel modelLabel = new JLabel("Model:");
+                                JTextField modelField = new JTextField(10);
+                                modelField.setText(carData.getString("Model"));
+                                modelField.setEditable(false);
+
+                                JLabel priceLabel = new JLabel("Price:");
+                                JTextField priceField = new JTextField(10);
+                                priceField.setText(carData.getString("Price"));
+                                priceField.setEditable(false);
+
+                                JLabel nameLabel = new JLabel("km travelled:");
+                                JTextField nameField = new JTextField(10);
+                                nameField.setText(carData.getString("km travelled"));
+                                nameField.setEditable(false);
+
+                                JLabel vinLabel = new JLabel("VIN:");
+                                JTextField vinField = new JTextField(10);
+                                vinField.setText(carData.getString("VIN"));
+                                vinField.setEditable(false);
+
+                                JLabel yearLabel = new JLabel("Year:");
+                                JTextField yearField = new JTextField(10);
+                                yearField.setText(carData.getString("Year"));
+                                yearField.setEditable(false);
+
+                                JLabel imageLabel = new JLabel("Image:");
+                                JTextField imageField = new JTextField(10);
+                                imageField.setEditable(false);
+
+                                // Create a separate panel for each row of input fields and labels
+
+                                JPanel brandPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                brandPanel.add(brandLabel);
+                                brandPanel.add(brandField);
+                                showPanel.add(brandPanel);
+
+                                JPanel modelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                modelPanel.add(modelLabel);
+                                modelPanel.add(modelField);
+                                showPanel.add(modelPanel);
+
+                                JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                pricePanel.add(priceLabel);
+                                pricePanel.add(priceField);
+                                showPanel.add(pricePanel);
+
+                                JPanel nameLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                nameLabelPanel.add(nameLabel);
+                                nameLabelPanel.add(nameField);
+                                showPanel.add(nameLabelPanel);
+
+                                JPanel vinPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                vinPanel.add(vinLabel);
+                                vinPanel.add(vinField);
+                                showPanel.add(vinPanel);
+
+                                JPanel yearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                yearPanel.add(yearLabel);
+                                yearPanel.add(yearField);
+                                showPanel.add(yearPanel);
+
+                                String currentDirectory = System.getProperty("user.dir");
+                                String destinationPath = currentDirectory + "\\resources\\addedImages";
+                                
+                                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                imagePanel.add(imageLabel);
+                                
+                                // Generate the image file name based on selectedCarIndex
+                                String imageName = "image" + selectedCarIndex + ".png";
+                                String imagePath = destinationPath + File.separator + imageName;
+                                ImageIcon imageIcon = new ImageIcon(imagePath);
+                                
+                                // Create a JLabel and set the image icon
+                                imageLabel.setIcon(imageIcon);
+                                
+                                imagePanel.add(imageLabel);
+                                showPanel.add(imagePanel);
+
                             }
                         }
 
-                        textArea.setText(sb.toString());
-
-                        if (selectedCarIndex != -1) {
-                            String currentDirectory = System.getProperty("user.dir");
-                            String imagePath = currentDirectory + "\\resources\\addedImages\\image" + selectedCarIndex + ".png";
-
-                            try {
-                                BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
-
-                                int desiredWidth = 50;
-                                int desiredHeight = 100;
-
-                                Image resizedImage = bufferedImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
-                                ImageIcon imageIcon = new ImageIcon(resizedImage);
-
-                                JLabel label = new JLabel(imageIcon);
-                                label.setBounds(10, textArea.getHeight() + 20, desiredWidth, desiredHeight);
-                                frame.add(label);
-
-                                frame.revalidate();
-                                frame.repaint();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                JOptionPane.showMessageDialog(frame, "Failed to load image.");
-                            }
-                        }
+                        frame.add(showPanel);
+                        frame.revalidate();
+                        frame.repaint();
+                        int result = JOptionPane.showConfirmDialog(frame, showPanel, "Show Cars", JOptionPane.OK_CANCEL_OPTION);
                     } else {
                         textArea.setText("No cars available.");
                     }
