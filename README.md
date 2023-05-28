@@ -1,4 +1,4 @@
-# **car-dealership Aplication**
+# **Car Dealership Application**
 This is a Java Swing application that simulates a Cars Dealership system. It allows users to add cars to a JSON file along with their details such as brand, VIN, km travelled, model, year, price, and an associated image. Users can also view the added cars from the JSON file.
 
 ## **Installation**
