@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.json.JSONArray;
@@ -19,14 +20,12 @@ import org.json.JSONObject;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
-import java.awt.GridLayout;
 import javax.swing.*;
 import java.io.File;
 import java.nio.file.Path;
 import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.awt.Image;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class carsFrame {
@@ -34,7 +33,6 @@ public class carsFrame {
     private static JFrame frame;
     private static JTextArea textArea;
     private static JComboBox<String> comboBox;
-    //private static JPanel addCarPanel;
 
     public static void main(String[] args) {
         frame = new JFrame("Cars Dealership");
@@ -43,9 +41,10 @@ public class carsFrame {
         frame.add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JToggleButton welcomeButton = new JToggleButton("Welcome");
-        JToggleButton addCarButton = new JToggleButton("Add car");
-        JToggleButton seeCarsButton = new JToggleButton("Show Car");
+        final JToggleButton welcomeButton = new JToggleButton("Welcome");
+        final JToggleButton addCarButton = new JToggleButton("Add car");
+        final JToggleButton seeCarsButton = new JToggleButton("Show Car");
+
         buttonPanel.add(welcomeButton);
         buttonPanel.add(addCarButton);
         buttonPanel.add(seeCarsButton);
@@ -61,23 +60,25 @@ public class carsFrame {
         welcomeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Welcome! Please select an option from the buttons.");
+                welcomeButton.setSelected(false);
             }
         });
 
         addCarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addCar();
+                addCarButton.setSelected(false);
             }
         });
 
         seeCarsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showCars();
+                seeCarsButton.setSelected(false);
             }
         });
     }
         private static void addCar() {
-            // Create the input fields and labels
             JLabel brandLabel = new JLabel("Brand:");
             JTextField brandField = new JTextField(10);
         
@@ -100,11 +101,9 @@ public class carsFrame {
             JButton chooseImageButton = new JButton("Choose Image");
             final JLabel selectedImageLabel = new JLabel();
         
-            // Set the layout for the input panel
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
         
-            // Create a separate panel for each row of input fields and labels
             JPanel brandPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             brandPanel.add(brandLabel);
             brandPanel.add(brandField);
@@ -141,7 +140,6 @@ public class carsFrame {
             inputPanel.add(imagePanel);
             inputPanel.add(selectedImageLabel);
         
-            // Add an action listener to the chooseImageButton
             chooseImageButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -159,7 +157,6 @@ public class carsFrame {
             // Show the input panel in a JOptionPane
             int result = JOptionPane.showConfirmDialog(frame, inputPanel, "Add Car", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                // Retrieve the car information
                 String brand = brandField.getText();
                 String vin = vinField.getText();
                 String kmTravelled = travelField.getText();
@@ -245,134 +242,128 @@ public class carsFrame {
             }
         }
     }
+
     private static void showCars() {
         try {
             if (Files.exists(Paths.get(JSON_FILE_PATH))) {
                 String fileContent = new String(Files.readAllBytes(Paths.get(JSON_FILE_PATH)));
                 JSONObject carsData = new JSONObject(fileContent);
-
+    
                 if (carsData.has("Cars")) {
                     JSONArray carsArray = carsData.getJSONArray("Cars");
-
+    
                     if (carsArray.length() > 0) {
-                        // Create a JComboBox to select the car by name
                         JComboBox<String> comboBox = new JComboBox<>();
-
+    
                         for (int i = 0; i < carsArray.length(); i++) {
                             JSONObject carData = carsArray.getJSONObject(i);
                             String brand = carData.getString("Brand");
                             comboBox.addItem(brand);
                         }
-
-                        // Show the JComboBox in a JOptionPane
-                        JOptionPane.showMessageDialog(frame, comboBox);
-
-                        // Retrieve the selected car name
-                        String selectedBrand = (String) comboBox.getSelectedItem();
-
-                        JPanel showPanel = new JPanel();
-                        showPanel.setLayout(new BoxLayout(showPanel, BoxLayout.Y_AXIS));
-
-                        int selectedCarIndex = -1;
-
-                        for (int i = 0; i < carsArray.length(); i++) {
-                            JSONObject carData = carsArray.getJSONObject(i);
-                            String brand = carData.getString("Brand");
-                            if (brand.equals(selectedBrand)) {
-                                selectedCarIndex = i + 1;
-
-                                // Create the labels and fields for car details
-
-                                JLabel brandLabel = new JLabel("Brand:");
-                                JTextField brandField = new JTextField(10);
-                                brandField.setText(carData.getString("Brand"));
-                                brandField.setEditable(false);
-
-                                JLabel modelLabel = new JLabel("Model:");
-                                JTextField modelField = new JTextField(10);
-                                modelField.setText(carData.getString("Model"));
-                                modelField.setEditable(false);
-
-                                JLabel priceLabel = new JLabel("Price:");
-                                JTextField priceField = new JTextField(10);
-                                priceField.setText(carData.getString("Price"));
-                                priceField.setEditable(false);
-
-                                JLabel nameLabel = new JLabel("km travelled:");
-                                JTextField nameField = new JTextField(10);
-                                nameField.setText(carData.getString("km travelled"));
-                                nameField.setEditable(false);
-
-                                JLabel vinLabel = new JLabel("VIN:");
-                                JTextField vinField = new JTextField(10);
-                                vinField.setText(carData.getString("VIN"));
-                                vinField.setEditable(false);
-
-                                JLabel yearLabel = new JLabel("Year:");
-                                JTextField yearField = new JTextField(10);
-                                yearField.setText(carData.getString("Year"));
-                                yearField.setEditable(false);
-
-                                JLabel imageLabel = new JLabel("Image:");
-                                JTextField imageField = new JTextField(10);
-                                imageField.setEditable(false);
-
-                                // Create a separate panel for each row of input fields and labels
-
-                                JPanel brandPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                brandPanel.add(brandLabel);
-                                brandPanel.add(brandField);
-                                showPanel.add(brandPanel);
-
-                                JPanel modelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                modelPanel.add(modelLabel);
-                                modelPanel.add(modelField);
-                                showPanel.add(modelPanel);
-
-                                JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                pricePanel.add(priceLabel);
-                                pricePanel.add(priceField);
-                                showPanel.add(pricePanel);
-
-                                JPanel nameLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                nameLabelPanel.add(nameLabel);
-                                nameLabelPanel.add(nameField);
-                                showPanel.add(nameLabelPanel);
-
-                                JPanel vinPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                vinPanel.add(vinLabel);
-                                vinPanel.add(vinField);
-                                showPanel.add(vinPanel);
-
-                                JPanel yearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                yearPanel.add(yearLabel);
-                                yearPanel.add(yearField);
-                                showPanel.add(yearPanel);
-
-                                String currentDirectory = System.getProperty("user.dir");
-                                String destinationPath = currentDirectory + "\\resources\\addedImages";
-                                
-                                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                                imagePanel.add(imageLabel);
-                                
-                                // Generate the image file name based on selectedCarIndex
-                                String imageName = "image" + selectedCarIndex + ".png";
-                                String imagePath = destinationPath + File.separator + imageName;
-                                ImageIcon imageIcon = new ImageIcon(imagePath);
-                                
-                                // Create a JLabel and set the image icon
-                                imageLabel.setIcon(imageIcon);
-                                
-                                imagePanel.add(imageLabel);
-                                showPanel.add(imagePanel);
-
+    
+                        int result = JOptionPane.showOptionDialog(frame, comboBox, "Select Car",
+                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+    
+                        if (result == JOptionPane.OK_OPTION) {
+                            String selectedBrand = (String) comboBox.getSelectedItem();
+    
+                            JPanel showPanel = new JPanel();
+                            showPanel.setLayout(new BoxLayout(showPanel, BoxLayout.Y_AXIS));
+                            
+                            int carSelectIndex = -1;
+                            for (int i = 0; i < carsArray.length(); i++) {
+                                JSONObject carData = carsArray.getJSONObject(i);
+                                String brand = carData.getString("Brand");
+                                if (brand.equals(selectedBrand)) {
+                                    carSelectIndex = i + 1;
+                                    JLabel brandLabel = new JLabel("Brand:");
+                                    JTextField brandField = new JTextField(10);
+                                    brandField.setText(carData.getString("Brand"));
+                                    brandField.setEditable(false);
+    
+                                    JLabel modelLabel = new JLabel("Model:");
+                                    JTextField modelField = new JTextField(10);
+                                    modelField.setText(carData.getString("Model"));
+                                    modelField.setEditable(false);
+    
+                                    JLabel priceLabel = new JLabel("Price:");
+                                    JTextField priceField = new JTextField(10);
+                                    priceField.setText(carData.getString("Price"));
+                                    priceField.setEditable(false);
+    
+                                    JLabel nameLabel = new JLabel("km travelled:");
+                                    JTextField nameField = new JTextField(10);
+                                    nameField.setText(carData.getString("km travelled"));
+                                    nameField.setEditable(false);
+    
+                                    JLabel vinLabel = new JLabel("VIN:");
+                                    JTextField vinField = new JTextField(15);
+                                    vinField.setText(carData.getString("VIN"));
+                                    vinField.setEditable(false);
+    
+                                    JLabel yearLabel = new JLabel("Year:");
+                                    JTextField yearField = new JTextField(10);
+                                    yearField.setText(carData.getString("Year"));
+                                    yearField.setEditable(false);
+    
+                                    JLabel imageLabel = new JLabel("Image:");
+    
+                                    JPanel brandPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    brandPanel.add(brandLabel);
+                                    brandPanel.add(brandField);
+                                    showPanel.add(brandPanel);
+    
+                                    JPanel modelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    modelPanel.add(modelLabel);
+                                    modelPanel.add(modelField);
+                                    showPanel.add(modelPanel);
+    
+                                    JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    pricePanel.add(priceLabel);
+                                    pricePanel.add(priceField);
+                                    showPanel.add(pricePanel);
+    
+                                    JPanel nameLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    nameLabelPanel.add(nameLabel);
+                                    nameLabelPanel.add(nameField);
+                                    showPanel.add(nameLabelPanel);
+    
+                                    JPanel vinPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    vinPanel.add(vinLabel);
+                                    vinPanel.add(vinField);
+                                    showPanel.add(vinPanel);
+    
+                                    JPanel yearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    yearPanel.add(yearLabel);
+                                    yearPanel.add(yearField);
+                                    showPanel.add(yearPanel);
+    
+                                    String currentDirectory = System.getProperty("user.dir");
+                                    String destinationPath = currentDirectory + "\\resources\\addedImages";
+    
+                                    JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                                    imagePanel.add(imageLabel);
+                                    ImageIcon icon = new ImageIcon(destinationPath + "\\" + "image" + carSelectIndex + ".png");
+                                    Image image = icon.getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH);
+                                    JLabel imageLabelField = new JLabel(new ImageIcon(image));
+                                    imagePanel.add(imageLabelField);
+                                    showPanel.add(imagePanel);
+    
+                                    frame.add(showPanel);
+                                    frame.revalidate();
+                                    frame.repaint();
+                                    result = JOptionPane.showConfirmDialog(frame, showPanel, "Show Car",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    
+                                    if (result != JOptionPane.OK_OPTION) {
+                                        frame.remove(showPanel);
+                                        frame.revalidate();
+                                        frame.repaint();
+                                        showPanel.setVisible(false);
+                                    }
+                                }
                             }
                         }
-
-                        frame.add(showPanel);
-                        frame.revalidate();
-                        frame.repaint();
-                        int result = JOptionPane.showConfirmDialog(frame, showPanel, "Show Cars", JOptionPane.OK_CANCEL_OPTION);
                     } else {
                         textArea.setText("No cars available.");
                     }
